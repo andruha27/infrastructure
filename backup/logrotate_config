@@ -1,0 +1,27 @@
+/opt/log/sausage-store-backend.log { 
+  daily  
+  rotate 3
+  compress 
+  delaycompress 
+  missingok 
+  size 1K
+  dateext 
+  create 
+  postrotate 
+    echo "$(date +"%Y-%m-%d %H:%M:%S")" rotate backend log >> student_rotate.log
+  endscript
+}
+/opt/log/sausage-store-frontend.log { 
+  daily  
+  rotate 3
+  compress 
+  delaycompress 
+  missingok 
+  size 1K 
+  dateext 
+  create 
+  postrotate 
+    echo "$(date +"%Y-%m-%d %H:%M:%S")" rotate frontend log >> student_rotate.log
+  endscript
+} 
+
