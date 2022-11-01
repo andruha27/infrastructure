@@ -1,0 +1,5 @@
+frontend_version: 1.0.245416
+frontend_log_directory: /opt/log/
+frontend_lib_directory: /var/www-data/dist/
+nexus_repo_url_frontend: https://nexus.praktikum-services.ru/repository/sausage-store-vorobyev-andrey-frontend
+frontend_dir_user: www-data

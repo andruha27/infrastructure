@@ -1,0 +1,14 @@
+---
+- name: Run backend role
+  # Шаблон целевых хостов это группа хостов с именем backend
+  hosts: backend
+  # Список ansible-ролей для backend-серверов
+  roles:
+    - backend
+
+- name: Run frontend role
+  # Шаблон целевых хостов это группа хостов с именем backend
+  hosts: frontend
+  # Список ansible-ролей для backend-серверов
+  roles:
+    - frontend

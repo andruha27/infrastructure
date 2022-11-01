@@ -1,0 +1,8 @@
+all: # Все серверы в нашем inventory, all - обязателен
+  children: # Дочерние группы для all
+    backend: # Группа хостов с именем backend
+      hosts:
+        51.250.93.97:
+    frontend:
+      hosts:
+        51.250.93.97:

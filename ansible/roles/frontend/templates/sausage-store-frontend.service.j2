@@ -1,0 +1,14 @@
+[Unit]
+Description=Sausage store frontend
+After=remote-fs.target nss-user-lookup.target
+
+[Service]
+ExecStart=/usr/bin/sudo /usr/bin/http-server {{frontend_lib_directory}}frontend/ -p 80 --proxy http://localhost:8080
+IgnoreSIGPIPE=false
+KillMode=process
+Restart=on-failure
+StandardOutput=file:{{frontend_log_directory}}sausage-store-frontend.log
+StandardError={{frontend_log_directory}}sausage-store-frontend.log
+#User=front-user
+[Install]
+WantedBy=multi-user.target
