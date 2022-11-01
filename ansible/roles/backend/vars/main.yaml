@@ -1,0 +1,5 @@
+backend_maven_version: 1.0.245417
+backend_service_user: jarservice
+backend_report_directory: /opt/log/
+backend_lib_directory: /var/jarservice/
+nexus_repo_url_backend: https://nexus.praktikum-services.ru/repository/sausage-store-vorobyev-andrey-backend

@@ -1,0 +1,66 @@
+---
+- name: Add repo NodeJS 16 x.
+  apt_key:
+    url: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+
+- name: Add nodejs 16.x apt rep
+  apt_repository:
+    repo: "deb https://deb.nodesource.com/node_16.x focal main"
+    state: present
+    update_cache: yes
+
+- name: Install Packages NodeJS
+  apt:
+    name:  nodejs
+
+- name: Install "coffee-script" node.js package.
+  npm:
+    name: http-server
+    global: yes
+
+- name: Add service user
+  user:
+    name: "{{frontend_dir_user}}"
+    create_home: yes
+    shell: /bin/bash
+- name: Create a directory lib
+  file:
+    path: "{{frontend_lib_directory}}"
+    owner: "{{frontend_dir_user}}"
+    group: "{{frontend_dir_user}}"
+    mode: '755'
+    state: directory
+
+- name: Download artifact NodeJs
+  get_url:
+    url: "{{nexus_repo_url_frontend}}/sausage-store/{{frontend_version}}/sausage-store-{{frontend_version}}.tar.gz"
+    dest: "{{frontend_lib_directory}}"
+    username: "{{nexus_user}}"
+    password: "{{nexus_password}}"
+
+- name: Extract
+  unarchive:
+    src: '{{frontend_lib_directory}}/sausage-store-{{frontend_version}}.tar.gz'
+    dest: "{{frontend_lib_directory}}/"
+    remote_src: yes # строчка очень важна для распаковки локальных архивов
+
+- name: Delete extracted archive
+  file:
+    state: absent
+    path: '{{frontend_lib_directory}}/sausage-store-{{frontend_version}}.tar.gz'
+    
+- name: Get service file from template
+  template:
+    src: sausage-store-frontend.service.j2
+    dest: /etc/systemd/system/sausage-store-frontend.service
+
+- name: Reload systemctl
+  become: true
+  systemd:
+    daemon_reload: yes
+
+- name: Let's go
+  become: true
+  service:
+    name: sausage-store-frontend
+    state: started

@@ -1,0 +1,52 @@
+---
+- name: Install openjdk-16-jdk
+  become: true
+  apt:
+    name: "openjdk-16-jdk"
+    update_cache: yes
+
+
+- name: Add service user
+  user:
+    name: "{{backend_service_user}}"
+    create_home: yes
+    shell: /bin/bash
+
+- name: Create a directory lib
+  file:
+    path: "{{backend_lib_directory}}" 
+    owner: "{{backend_service_user}}"
+    mode: '0755'
+    state: directory
+  become: true
+
+- name: Create a directory for reports
+  file:
+    path: "{{backend_report_directory}}"
+    state: directory
+    mode: '0777'
+  become: true
+
+- name: Download artifact Maven
+  get_url:
+    url: "{{nexus_repo_url_backend}}/com/yandex/practicum/devops/sausage-store/{{backend_maven_version}}/sausage-store-{{backend_maven_version}}.jar"
+    dest: "{{backend_lib_directory}}/sausage-store.jar"
+    owner: "{{backend_service_user}}"
+    username: "{{nexus_user}}"
+    password: "{{nexus_password}}"
+    
+- name: Get service file from template
+  template:
+    src: sausage-store-backend.service.j2
+    dest: /etc/systemd/system/sausage-store-backend.service
+
+- name: Reload systemctl
+  become: true
+  systemd:
+    daemon_reload: yes
+
+- name: Let's go
+  become: true
+  service:
+    name: sausage-store-backend
+    state: started
