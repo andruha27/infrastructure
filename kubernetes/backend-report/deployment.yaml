@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-report
+  labels:
+    app: backend-report
+spec:
+  replicas: 1
+  # Стратегия развёртывания. Recreate — удалит сначала все старые Pod'ы 
+  # Есть и более гибкая стратегии, например, RollingUpdate, которая будет обновлять Pod'ы порциями  
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: gitlab.praktikum-services.ru:5050/std-009-047/sausage-store/sausage-report:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: D
+              value: "84.201.134.236"
+            - name: VAULT_PORT
+              value: "8200"
+            - name: DB
+              valueFrom:
+                secretKeyRef:
+                  name: db
+                  key: db
+          ports:
+            - name: backend-report
+              containerPort: 8081
+      imagePullSecrets:
+        - name: docker-config-secret
