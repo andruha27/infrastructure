@@ -25,14 +25,4 @@ spec:
             name: frontend
             port:
               # У сервиса может быть несколько портов, указываем нужный нам
-              number: 8080
-      - path: /api
-        pathType: Prefix
-        backend:
-          service:
-            # Заранее создан сервис типа ClusterIP
-            # Он выступает в качестве бэкенда нашего Ingress
-            name: backend
-            port:
-              # У сервиса может быть несколько портов, указываем нужный нам
-              number: 8080
+              number: 80

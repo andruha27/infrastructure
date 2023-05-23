@@ -13,14 +13,14 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      app: backend
+      app: backend-report
   template:
     metadata:
       labels:
-        app: backend
+        app: backend-report
     spec:
       containers:
-        - name: backend
+        - name: backend-report
           image: gitlab.praktikum-services.ru:5050/std-009-047/sausage-store/sausage-report:latest
           imagePullPolicy: IfNotPresent
           env:
