@@ -31,8 +31,8 @@ spec:
             - name: DB
               valueFrom:
                 secretKeyRef:
-                  name: db
-                  key: db
+                  name: vault
+                  key: vault_token
           ports:
             - name: backend-report
               containerPort: 8081
