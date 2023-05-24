@@ -5,6 +5,7 @@ metadata:
   labels:
     app: frontend
 spec:
+  revisionHistoryLimit: 15
   replicas: 1
   strategy:
     type: Recreate
@@ -42,3 +43,12 @@ spec:
             items:
               - key: nginx.conf
                 path: nginx.conf
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - frontend

@@ -6,6 +6,7 @@ metadata:
   labels:
     app: backend-report
 spec:
+  revisionHistoryLimit: 15
   replicas: 1
   # Стратегия развёртывания. Recreate — удалит сначала все старые Pod'ы 
   # Есть и более гибкая стратегии, например, RollingUpdate, которая будет обновлять Pod'ы порциями  
@@ -24,7 +25,7 @@ spec:
           image: gitlab.praktikum-services.ru:5050/std-009-047/sausage-store/sausage-report:latest
           imagePullPolicy: IfNotPresent
           env:
-            - name: D
+            - name: VAULT_HOST
               value: "62.84.118.71"
             - name: VAULT_PORT
               value: "8200"
