@@ -1,0 +1,33 @@
+global:
+  environment: production
+  env:
+  - name: VAULT_HOST
+    value: 62.84.118.71
+  - name: VAULT_PORT
+    value: 8200
+  vault:
+    secret:
+      name: vault
+      key: vault_token
+  db:
+    secret:
+      name: db
+      key: db
+  backend:
+    port:
+      internal: 8080
+      external: 8080
+
+  backend_report:
+    port:
+      internal: 8081
+      external: 8081
+
+  frontend:
+    port:
+      internal: 80
+      external: 80
+
+ingress:
+  className: "nginx"
+  host: "vorobyev-andrey-09.k8s.praktikum-services.tech"

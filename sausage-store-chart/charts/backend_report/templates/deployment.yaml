@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  revisionHistoryLimit: 15
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Chart.Name }}
+      app.kubernetes.io/instance: "prod-store"
+      app.kubernetes.io/version: "{{ .Chart.AppVersion }}"
+      app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+      helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+      app.kubernetes.io/component: {{ .Chart.Name }}
+      app.kubernetes.io/part-of: "sausage-store"
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Chart.Name }}
+        app.kubernetes.io/instance: "prod-store"
+        app.kubernetes.io/version: "{{ .Chart.AppVersion }}"
+        app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        app.kubernetes.io/component: {{ .Chart.Name }}
+        app.kubernetes.io/part-of: "sausage-store"
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          env:
+            {{- range .Values.env }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+            {{- range .Values.global.env }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+            - name: DB
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.db.secret.name }}
+                  key: {{ .Values.global.db.secret.key }}
+          ports:
+            - name: {{ .Chart.Name }}
+              containerPort: {{ .Values.global.backend_report.port.internal }}
+      imagePullSecrets:
+        - name: docker-config-secret
