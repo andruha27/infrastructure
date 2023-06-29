@@ -1,4 +1,4 @@
-replicas: 5
+replicas: 4
 rollingUpdate:
   maxUnavailable: "80%"
   maxSurge: "20%"
