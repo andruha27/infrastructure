@@ -27,6 +27,10 @@ spec:
         helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
         app.kubernetes.io/component: {{ .Chart.Name }}
         app.kubernetes.io/part-of: sausage-store
+      annotations:
+        prometheus.io/path: /actuator/prometheus
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true" 
     spec:
       containers:
         - name: {{ .Chart.Name }}
