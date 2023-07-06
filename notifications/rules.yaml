@@ -1,0 +1,40 @@
+---
+groups:
+  - name: Sausage store rules
+    rules:
+    - alert: InstanceDown
+      expr: up{app="backend"} == 0
+      for: 1m
+      labels:
+        severity: critical
+        project: "sausage_store"
+        component: "Backend"
+        messenger: "telegram"
+        namespace: "std-009-047"
+    - alert: RequestError404
+      expr: sum(http_server_requests_seconds_count{status="404"})
+      labels:
+        severity: critical
+        project: "sausage_store"
+        messenger: "telegram"
+        namespace: "std-009-047"
+      annotations:
+        summary: Found error 404
+        description: Found error 404 {{ $value }} time(s).
+    - alert: Latency
+      expr: quantile(0.95,http_server_requests_seconds_max{uri="/api/orders", method="POST"}) >=0.1
+      for: 5m
+      labels:
+        severity: moderate
+        project: "sausage_store"
+        messenger: "telegram"
+        namespace: "std-009-047"
+    - alert: ActuatorError
+      expr: http_server_requests_seconds_count{uri="/actuator/prometheus", status=~"4.."}
+      for: 2m
+      labels:
+        severity: moderate
+        project: "sausage_store"
+        messenger: "telegram"
+        namespace: "std-009-047"
+        
