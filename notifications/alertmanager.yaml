@@ -30,7 +30,12 @@ data:
            chat_id: {{ .Values.channel_id }}
            parse_mode: HTML
            message: |-
-              🔥 <b>Alert:</b> 🔥
+              {{if eq .Status "firing"}}
+              Status: <b>{{.Status | upper }} 🔥</b>
+              {{end}}
+              {{- if eq .Status "resolved"}}
+              Status: <b>{{.Status | upper}} ✅</b>
+              {{end}}
               {{ "{{" }} range .Alerts {{ "}}" }}
               <b>{{ "{{" }} .Annotations.summary {{ "}}" }}</b>
               {{ "{{" }} .Annotations.description {{ "}}" }}
