@@ -11,16 +11,16 @@ groups:
         component: "Backend"
         messenger: "telegram"
         namespace: "std-009-047"
-    - alert: RequestError404
-      expr: sum(http_server_requests_seconds_count{status="404"})
+    - alert: RequestError500
+      expr: sum(http_server_requests_seconds_count{status="500"})
       labels:
         severity: critical
         project: "sausage_store"
         messenger: "telegram"
         namespace: "std-009-047"
       annotations:
-        summary: Found error 404
-        description: Found error 404 {{ $value }} time(s).
+        summary: Found error 500
+        description: Found error 500 {{ $value }} time(s).
     - alert: Latency
       expr: quantile(0.95,http_server_requests_seconds_max{uri="/api/orders", method="POST"}) >=0.1
       for: 5m
