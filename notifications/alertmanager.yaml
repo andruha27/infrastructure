@@ -3,7 +3,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: alertmanager
-  namespace: {{ .Release.Namespace }}
+  namespace:
+    {{ .Release.Namespace }}
   labels:
     app: alertmanager
     app.kubernetes.io/managed-by: Helm
@@ -30,13 +31,9 @@ data:
            chat_id: {{ .Values.channel_id }}
            parse_mode: HTML
            message: |-
-              {{if eq .Status "firing"}}
-              Status: <b>{{.Status | upper }} 🔥</b>
-              {{end}}
-              {{- if eq .Status "resolved"}}
-              Status: <b>{{.Status | upper}} ✅</b>
-              {{end}}
-              {{ "{{" }} range .Alerts {{ "}}" }}
-              <b>{{ "{{" }} .Annotations.summary {{ "}}" }}</b>
-              {{ "{{" }} .Annotations.description {{ "}}" }}
-              {{ "{{-" }} end {{ "-}}" }}
+             {{ "{{" }} range .Alerts {{ "}}" }}
+             {{ "{{" }} if eq .Status "firing" {{ "}}" }}Status: <b> {{ "{{" }} .Status {{ "}}" }} </b>{{ "{{" }} end {{ "}}" }}
+             {{ "{{" }} if eq .Status "resolved" {{ "}}" }}Status: <b> {{ "{{" }} .Status {{ "}}" }} </b>{{ "{{" }} end {{ "}}" }}
+             <b>{{ "{{" }} .Annotations.summary {{ "}}" }}</b>
+             {{ "{{" }} .Annotations.description {{ "}}" }}
+             {{ "{{-" }} end {{ "-}}" }}
